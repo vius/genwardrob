@@ -38,6 +38,12 @@ const cards = [
   {
     id: 'https://loremflickr.com/400/400?lock=3333786447001369',
   },
+  {
+    id: 'https://loremflickr.com/400/400?lock=3333786447001369',
+  },
+  {
+    id: 'https://loremflickr.com/400/400?lock=3333786447001369',
+  },
 ]
 const props = defineProps({
   isActive: {
