@@ -1,18 +1,14 @@
 <template>
   <Card class="transition-all duration-300 py-4" :class="{ hidden: !isActive }">
-    <CardContent class="flex flex-col gap-y-5 flex-1 px-3 sm:px-5">
-      <div class="flex flex-col gap-y-2">
+    <CardContent
+      class="gap-y-5 flex-1 px-3 w-full flex flex-col gap-2 sm:px-5 sm:gap-x-12 sm:flex-row"
+    >
+      <div class="w-full flex flex-col">
         <h3 class="text-lg font-medium text-foreground">Image</h3>
-        <p class="text-sm text-muted-foreground">
-          Please upload one portrait photo and one full-body photo of yourself.
-        </p>
-        <!-- Image upload section -->
-        <section class="w-full flex gap-2 sm:gap-x-12 flex-col sm:flex-row">
-          <ImageUploader class="flex-1" label="Click to upload portrait photo"></ImageUploader>
-          <ImageUploader class="flex-1" label="Click to upload full-body photo"></ImageUploader>
-        </section>
+        <p class="text-sm text-muted-foreground">Please upload one full-body photo of yourself.</p>
+        <ImageUploader class="flex-1" label="Click to upload full-body photo"></ImageUploader>
       </div>
-      <div class="flex flex-col gap-y-2">
+      <div class="flex flex-col gap-y-2 w-full">
         <h3 class="text-lg font-medium text-foreground">Text Description</h3>
         <p class="text-sm text-muted-foreground">
           Please upload a brief descriptive statement outlining your travel time, destination, and
@@ -20,7 +16,7 @@
         </p>
         <Textarea
           v-model="travelDescription"
-          class="h-36 sm:h-48"
+          class="h-full min-h-56"
           placeholder="I'm traveling to Bali for a week-long beach vacation in July..."
         />
       </div>
