@@ -1,8 +1,13 @@
 <template>
   <Card class="transition-all duration-300 p-0 pb-3 sm:pb-5" :class="{ hidden: !isActive }">
     <CardContent class="px-3 sm:px-5 flex-1">
-      <Accordion type="single" collapsible class="w-full" :default-value="defaultValue">
-        <!-- User Profile Section -->
+      <Accordion
+        type="single"
+        collapsible
+        class="w-full"
+        :default-value="defaultValue"
+        :unmountOnHide="false"
+      >
         <AccordionItem value="user-profile">
           <AccordionTrigger data-orientation="horizontal" class="justify-between w-full">
             <span class="text-base font-medium text-foreground">
@@ -10,15 +15,11 @@
             </span>
           </AccordionTrigger>
           <AccordionContent>
-            <div class="border border-border rounded-lg p-3 min-h-24 bg-muted/20">
-              <pre class="text-sm whitespace-pre-wrap">{{
-                JSON.stringify(userProfile, null, 2)
-              }}</pre>
+            <div class="rounded-lg h-auto sm:h-72 bg-zinc-100 flex justify-center items-center">
+              <img :src="data.profile" alt="user profile" class="w-full h-full !object-contain" />
             </div>
           </AccordionContent>
         </AccordionItem>
-
-        <!-- Database Search Information Section -->
         <AccordionItem value="search-info">
           <AccordionTrigger>
             <span class="text-base font-medium text-foreground">
@@ -26,15 +27,12 @@
             </span>
           </AccordionTrigger>
           <AccordionContent>
-            <div class="grid grid-cols-3 gap-3">
-              <div class="border border-border rounded-lg p-3 bg-muted/20"></div>
-              <div class="border border-border rounded-lg p-3 bg-muted/20"></div>
-              <div class="border border-border rounded-lg p-3 bg-muted/20"></div>
-            </div>
+            <pre class="text-sm whitespace-pre-wrap bg-black text-white p-4 rounded">{{
+              JSON.stringify(props.data.query1, null, 2)
+            }}</pre>
           </AccordionContent>
         </AccordionItem>
 
-        <!-- Search Results Section -->
         <AccordionItem value="search-results">
           <AccordionTrigger>
             <span class="text-base font-medium text-foreground">
@@ -42,15 +40,11 @@
             </span>
           </AccordionTrigger>
           <AccordionContent>
-            <div class="grid grid-cols-3 gap-3">
-              <div class="border border-border rounded-lg p-3 bg-muted/20"></div>
-              <div class="border border-border rounded-lg p-3 bg-muted/20"></div>
-              <div class="border border-border rounded-lg p-3 bg-muted/20"></div>
-            </div>
+            <pre class="text-sm whitespace-pre-wrap bg-black text-white p-4 rounded">{{
+              JSON.stringify(props.data.result1, null, 2)
+            }}</pre>
           </AccordionContent>
         </AccordionItem>
-
-        <!-- Background Selection Section -->
         <AccordionItem value="background-selection">
           <AccordionTrigger>
             <span class="text-base font-medium text-foreground">
@@ -58,11 +52,26 @@
             </span>
           </AccordionTrigger>
           <AccordionContent>
-            <CardSelect :cards="cards" v-model="selectedBackground">
+            <CardSelect :cards="props.data.result2" v-model="selectedBackground">
               <template #default="{ data }">
-                <img :src="data.id" />
+                <img :src="data.url" />
               </template>
             </CardSelect>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="recommended-outfits">
+          <AccordionTrigger>
+            <span class="text-base font-medium text-foreground">
+              (5) R3 — Recommended outfits
+            </span>
+          </AccordionTrigger>
+          <AccordionContent class="sm:grid sm:grid-cols-3 sm:gap-3">
+            <img
+              :src="item.url"
+              v-for="(item, index) in props.data.result3"
+              :key="index"
+              class="rounded"
+            />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
@@ -75,10 +84,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { Check } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import {
   Accordion,
   AccordionContent,
@@ -86,48 +93,32 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import CardSelect from './CardSelect.vue'
+import { toast } from 'vue-sonner'
 
 const props = defineProps({
   isActive: {
     type: Boolean,
     default: false,
   },
-  isMobile: {
-    type: Boolean,
-    default: false,
+  data: {
+    type: Object,
+    default: () => ({}),
   },
 })
 
-const cards = [
-  {
-    id: 'https://loremflickr.com/400/400?lock=8220500560465192',
-  },
-  {
-    id: 'https://loremflickr.com/400/400?lock=3333786447001369',
-  },
-  {
-    id: 'https://loremflickr.com/400/400?lock=3333786447001369',
-  },
-]
-
-const emit = defineEmits(['generate', 'next-tab', 'background-selected'])
+const emit = defineEmits(['generate'])
 const defaultValue = 'user-profile'
-const userProfile = ref({
-  name: 'User',
-  preferences: 'Casual beach style',
-  skinTone: 'Medium',
-  bodyType: 'Average',
-})
-
 const selectedBackground = ref([])
 
 const handleGenerate = (e) => {
-  // Animation to show processing
+  // 判断是否选中了背景
+  if (selectedBackground.value.length === 0) {
+    toast.error('Please select at least one background')
+    return
+  }
   const button = e.target
   button.innerText = 'Generating...'
   button.disabled = true
-
-  // Emit the data to the parent component
   emit('generate', {
     selectedBackground: selectedBackground.value,
   })
@@ -135,11 +126,6 @@ const handleGenerate = (e) => {
   setTimeout(() => {
     button.innerText = 'Generate'
     button.disabled = false
-
-    // For mobile, automatically move to the next tab after generating
-    if (props.isMobile) {
-      emit('next-tab')
-    }
   }, 1500)
 }
 </script>

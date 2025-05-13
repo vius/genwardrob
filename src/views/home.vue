@@ -1,6 +1,12 @@
 <template>
   <div class="min-h-screen flex items-center flex-col gap-y-3 p-4 overflow-auto">
-    <h1 class="text-2xl md:text-5xl font-bold mb-5 text-foreground">Travel Wardrobe</h1>
+    <!-- <h1 class="text-2xl md:text-5xl font-bold mb-5 text-foreground">Travel Wardrobe</h1> -->
+    <HyperText
+      text="Travel Wardrobe"
+      class="text-4xl font-bold"
+      :duration="800"
+      :animate-on-load="true"
+    />
     <Stepper class="flex w-full items-start gap-2" v-model="step">
       <StepperItem
         v-for="item in steps"
@@ -53,32 +59,26 @@
       <InformationCard
         :is-active="step === 2"
         @generate="handleInformationGenerate"
-        @next-tab="handleNextTab"
-        @background-selected="handleBackgroundSelected"
+        :data="informationData"
         class="overflow-y-auto"
       />
 
       <!-- Wardrobe Section -->
-      <WardrobeCard
-        :is-active="step === 3"
-        @download="handleWardrobeDownload"
-        @outfit-selected="handleOutfitSelected"
-        class="overflow-y-auto"
-      />
+      <WardrobeCard :is-active="step === 3" class="overflow-y-auto" :data="resultData" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import UserInputCard from '@/components/UserInputCard.vue'
 import InformationCard from '@/components/InformationCard.vue'
 import WardrobeCard from '@/components/WardrobeCard.vue'
 import { Button } from '@/components/ui/button'
-
+import { toast } from 'vue-sonner'
+import HyperText from '@/components/ui/hyper-text/HyperText.vue'
 import {
   Stepper,
-  StepperDescription,
   StepperItem,
   StepperSeparator,
   StepperTitle,
@@ -100,64 +100,77 @@ const steps = [
     title: 'Results',
   },
 ]
-// Tab navigation
-const tabs = ['UserInput', 'Information', 'Wardrobe']
-const step = ref(1)
-const windowWidth = ref(window.innerWidth)
+const step = ref(3)
 
-// App state
-const userInputData = ref(null)
-const selectedBackground = ref(2)
-const selectedOutfits = ref([])
-
-// Resize handler for responsive behavior
-const handleResize = () => {
-  windowWidth.value = window.innerWidth
-}
-
-onMounted(() => {
-  window.addEventListener('resize', handleResize)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize)
-})
+const userInputData = ref({})
+const informationData = ref({})
+const resultData = ref()
+resultData.value = [
+  {
+    base64: 'iVBORw0KGgoAAAANSUhEUgAAB9AAAARlCAYAAADh11wiAAAACXBIWXMAAC4j',
+    url: 'https://www.popsci.com/wp-content/uploads/2023/01/10/Ocean-1010062.png',
+    text: 'You look so pretty',
+  },
+]
 
 const handleNextTab = () => {
   step.value = step.value + 1
 }
 
-const handleUserInputGenerate = (data) => {
-  console.log('User input data:', data)
-  userInputData.value = data
-  handleNextTab()
-}
-
-const handleInformationGenerate = (data) => {
-  console.log('Information data:', data)
-  handleNextTab()
-}
-
-const handleWardrobeDownload = (selectedOutfitImages) => {
-  console.log('Downloading outfits:', selectedOutfitImages)
-}
-
-const handleBackgroundSelected = (backgroundId) => {
-  console.log('Background selected:', backgroundId)
-  selectedBackground.value = backgroundId
-}
-
-const handleOutfitSelected = (data) => {
-  console.log('Outfit selection changed:', data)
-  // Update the selected outfits
-  if (data.selected) {
-    selectedOutfits.value.push(data.index)
-  } else {
-    const index = selectedOutfits.value.indexOf(data.index)
-    if (index !== -1) {
-      selectedOutfits.value.splice(index, 1)
-    }
+const handleUserInputGenerate = async (data) => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/submit`, {
+    method: 'POST',
+    headers: {
+      'ngrok-skip-browser-warning': 'true',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  const result = await response.json()
+  const { errNo, errMsg } = result
+  if (!response.ok || errNo !== 0) {
+    const text = errMsg || response.statusText || 'Request failed'
+    toast.error(text)
+    return
   }
+  userInputData.value = data
+  informationData.value = result.data
+  handleNextTab()
+}
+
+const handleInformationGenerate = async (data) => {
+  console.log('data.selectedBackground', data)
+  const { selectedBackground = [] } = data
+  const imageList = informationData.value?.result2
+    .filter((_, index) => selectedBackground.includes(index))
+    .map((item) => item.url)
+  const params = new URLSearchParams({
+    selectedImageList: imageList,
+    id: informationData.value?.id,
+  })
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/admin/getResults?${params.toString()}`,
+    {
+      headers: {
+        'ngrok-skip-browser-warning': 'true',
+      },
+    },
+  )
+  const result = await response.json()
+  const { errNo, errMsg } = result
+  if (!response.ok || errNo !== 0) {
+    const text = errMsg || response.statusText || 'Request failed'
+    toast.error(text)
+    return
+  }
+  resultData.value = (result.data?.list || []).map((item) => {
+    return {
+      text: item.text,
+      ...item.image,
+    }
+  })
+  console.log('resultData', resultData.value)
+  handleNextTab()
 }
 </script>
 

@@ -1,23 +1,22 @@
 <template>
-  <div class="w-full mx-auto grid-cols-3 grid gap-3">
+  <div class="w-full mx-auto flex flex-col gap-2 sm:grid-cols-3 sm:grid sm:gap-3">
     <div
       v-for="(card, index) in props.cards"
-      :key="card.id || index"
+      :key="index"
+      :ref="() => props.itemRefs"
       :class="[
-        'relative rounded-sm overflow-hidden transition-all duration-200 cursor-pointer hover:shadow-md  flex justify-center items-center',
-        isSelected(card.id)
-          ? 'border-primary bg-primary/5'
-          : 'border-border hover:border-primary/50',
+        'relative rounded-sm overflow-hidden transition-all duration-200 cursor-pointer hover:shadow-md  flex justify-center items-center bg-zinc-100',
+        isSelected(index) ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50',
       ]"
-      @click="toggleSelection(card.id)"
+      @click="toggleSelection(index)"
       tabindex="0"
-      @keydown="handleKeyDown($event, card.id)"
+      @keydown="handleKeyDown($event, index)"
       role="checkbox"
-      :aria-checked="isSelected(card.id)"
+      :aria-checked="isSelected(index)"
       :aria-label="card.title"
     >
       <div
-        v-if="isSelected(card.id)"
+        v-if="isSelected(index)"
         class="absolute top-2 right-2 h-5 w-5 text-primary bg-white rounded-full flex justify-center items-center"
       >
         <svg
@@ -36,7 +35,7 @@
         </svg>
       </div>
 
-      <slot :data="card"></slot>
+      <slot :data="card" :index="index"></slot>
     </div>
   </div>
 </template>
@@ -54,29 +53,33 @@ const props = defineProps({
     type: Array,
     default: [],
   },
+  itemRefs: {
+    type: Array,
+    default: [],
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 
 const selectedCards = ref([])
 
-const isSelected = (cardId) => {
-  return selectedCards.value.includes(cardId)
+const isSelected = (index) => {
+  return selectedCards.value.includes(index)
 }
 
-const toggleSelection = (cardId) => {
-  if (isSelected(cardId)) {
-    selectedCards.value = selectedCards.value.filter((id) => id !== cardId)
+const toggleSelection = (index) => {
+  if (isSelected(index)) {
+    selectedCards.value = selectedCards.value.filter((idx) => idx !== index)
   } else {
-    selectedCards.value.push(cardId)
+    selectedCards.value.push(index)
   }
   emit('update:modelValue', selectedCards.value)
 }
 
 // Handle keyboard navigation
-const handleKeyDown = (event, cardId) => {
+const handleKeyDown = (event, index) => {
   if (event.key === 'Enter' || event.key === ' ') {
     event.preventDefault()
-    toggleSelection(cardId)
+    toggleSelection(index)
   }
 }
 </script>
