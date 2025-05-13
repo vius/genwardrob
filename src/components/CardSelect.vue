@@ -5,7 +5,7 @@
       :key="index"
       :ref="() => props.itemRefs"
       :class="[
-        'relative rounded-sm overflow-hidden transition-all duration-200 cursor-pointer hover:shadow-md  flex justify-center items-center bg-zinc-100',
+        'relative rounded-sm overflow-hidden transition-all duration-200 cursor-pointer hover:shadow-md min-h-32  flex justify-center items-center bg-zinc-100',
         isSelected(index) ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50',
       ]"
       @click="toggleSelection(index)"

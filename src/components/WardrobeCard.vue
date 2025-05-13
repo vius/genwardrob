@@ -1,14 +1,12 @@
 <template>
   <Card class="transition-all duration-300" :class="{ hidden: !isActive }">
     <CardContent class="px-3 sm:px-5 flex-1">
-      <CardSelect
-        :cards="props.data"
-        v-model="selectedImages"
-        :itemRefs="itemRefs"
-        class="grid grid-cols-3 gap-3"
-      >
+      <CardSelect :cards="props.data" v-model="selectedImages" class="grid grid-cols-3 gap-3">
         <template #default="{ data, index }">
-          <img :src="data.url" :class="{ 'selected-image': selectedImages.includes(index) }" />
+          <img
+            :src="`data:image/${data.type};base64,${data.base64}`"
+            :class="{ 'selected-image': selectedImages.includes(index) }"
+          />
         </template>
       </CardSelect>
     </CardContent>
@@ -36,10 +34,6 @@ const props = defineProps({
   },
 })
 
-const itemRefs = ref([])
-setTimeout(() => {
-  console.log('itemRefs', itemRefs.value)
-}, 8000)
 const selectedImages = ref([])
 const handleDownload = (e) => {
   // Animation to show processing
