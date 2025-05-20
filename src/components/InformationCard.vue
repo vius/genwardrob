@@ -67,7 +67,7 @@
           </AccordionTrigger>
           <AccordionContent class="sm:grid sm:grid-cols-3 sm:gap-3">
             <img
-              :src="item.url"
+              :src="item.base64"
               v-for="(item, index) in props.data.result3"
               :key="index"
               class="rounded"

@@ -18,7 +18,12 @@ export default defineConfig({
 		proxy: {
 			"/admin": {
 				target:
-					"https://03bf-2406-3003-2001-d63-8cb9-6acd-388b-355e.ngrok-free.app",
+					"https://866f-2406-3003-2001-311d-710c-3217-5c66-5675.ngrok-free.app",
+				changeOrigin: true,
+			},
+			"/user_images": {
+				target:
+					"https://866f-2406-3003-2001-311d-710c-3217-5c66-5675.ngrok-free.app",
 				changeOrigin: true,
 			},
 		},

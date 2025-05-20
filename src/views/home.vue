@@ -67,16 +67,19 @@
       <WardrobeCard :is-active="step === 3" class="overflow-y-auto" :data="resultData" />
     </div>
   </div>
+  <!-- 添加全屏loading组件 -->
+  <FullScreenLoading :visible="isLoading" :text="loadingText" />
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import UserInputCard from '@/components/UserInputCard.vue'
 import InformationCard from '@/components/InformationCard.vue'
 import WardrobeCard from '@/components/WardrobeCard.vue'
 import { Button } from '@/components/ui/button'
 import { toast } from 'vue-sonner'
 import HyperText from '@/components/ui/hyper-text/HyperText.vue'
+import FullScreenLoading from '@/components/ui/loading/FullScreenLoading.vue'
 import {
   Stepper,
   StepperItem,
@@ -85,6 +88,10 @@ import {
   StepperTrigger,
 } from '@/components/ui/stepper'
 import { Check, Circle, Dot } from 'lucide-vue-next'
+
+// 添加全局loading状态
+const isLoading = ref(false)
+const loadingText = ref('Generating Results')
 
 const steps = [
   {
@@ -117,6 +124,9 @@ const handleNextTab = () => {
 }
 
 const handleUserInputGenerate = async (data) => {
+  isLoading.value = true
+  loadingText.value = 'Processing Your Request'
+
   const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/submit`, {
     method: 'POST',
     headers: {
@@ -134,10 +144,25 @@ const handleUserInputGenerate = async (data) => {
   }
   userInputData.value = data
   informationData.value = result.data
+  if (informationData.value?.result3) {
+    informationData.value.result3 = informationData.value.result3.map((item) => {
+      const { base64, url } = item
+      const type = getImageTypeFromUrl(url)
+      const base64String = `data:image/${type};base64,${base64}`
+      return {
+        base64: base64String,
+        url,
+      }
+    })
+  }
   handleNextTab()
+  isLoading.value = false
 }
 
 const handleInformationGenerate = async (data) => {
+  isLoading.value = true
+  loadingText.value = 'Creating Your Wardrobe'
+
   const { selectedBackground = [] } = data
   const imageList = informationData.value?.result2
     .filter((_, index) => selectedBackground.includes(index))
@@ -169,6 +194,7 @@ const handleInformationGenerate = async (data) => {
     }
   })
   handleNextTab()
+  isLoading.value = false
 }
 </script>
 
