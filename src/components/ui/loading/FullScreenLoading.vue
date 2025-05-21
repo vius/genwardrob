@@ -2,7 +2,7 @@
   <Transition name="fade">
     <div
       v-if="visible"
-      class="fixed inset-0 z-50 flex flex-col items-center justify-center backdrop-opacity-50 backdrop-blur-sm"
+      class="fixed inset-0 z-50 flex flex-col items-center justify-center backdrop-opacity-80 backdrop-blur-sm"
     >
       <div class="relative flex flex-col items-center gap-6">
         <!-- Spinner -->
