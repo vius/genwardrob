@@ -191,9 +191,8 @@ const handleInformationGenerate = async (data) => {
   }
   resultData.value = (result.data?.list || []).map((item) => {
     return {
-      text: item.text,
       ...item,
-      type: getImageTypeFromUrl(item.url),
+      type: getImageTypeFromUrl(item.image || item.url),
     }
   })
   handleNextTab()
