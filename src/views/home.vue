@@ -134,6 +134,8 @@ const handleUserInputGenerate = async (data) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
+  }).finally(() => {
+    isLoading.value = false
   })
   const result = await response.json()
   const { errNo, errMsg } = result
@@ -156,7 +158,6 @@ const handleUserInputGenerate = async (data) => {
     })
   }
   handleNextTab()
-  isLoading.value = false
 }
 
 const handleInformationGenerate = async (data) => {
@@ -178,7 +179,9 @@ const handleInformationGenerate = async (data) => {
         'ngrok-skip-browser-warning': 'true',
       },
     },
-  )
+  ).finally(() => {
+    isLoading.value = false
+  })
   const result = await response.json()
   const { errNo, errMsg } = result
   if (!response.ok || errNo !== 0) {
@@ -189,12 +192,11 @@ const handleInformationGenerate = async (data) => {
   resultData.value = (result.data?.list || []).map((item) => {
     return {
       text: item.text,
-      ...item.image,
-      type: getImageTypeFromUrl(item.image.url),
+      ...item,
+      type: getImageTypeFromUrl(item.url),
     }
   })
   handleNextTab()
-  isLoading.value = false
 }
 </script>
 
