@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full mx-auto flex flex-col gap-2 sm:grid-cols-3 sm:grid sm:gap-3">
+  <div class="w-full mx-auto flex flex-col gap-2 sm:grid-cols-2 lg:grid-cols-3 sm:grid sm:gap-3">
     <div
       v-for="(card, index) in props.cards"
       :key="index"

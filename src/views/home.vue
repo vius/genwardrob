@@ -108,7 +108,6 @@ const steps = [
   },
 ]
 const step = ref(1)
-
 const userInputData = ref({})
 const informationData = ref({})
 const resultData = ref()
@@ -118,7 +117,6 @@ const getImageTypeFromUrl = (url) => {
   }
   return 'jpg'
 }
-
 const handleNextTab = () => {
   step.value = step.value + 1
 }
@@ -148,28 +146,23 @@ const handleUserInputGenerate = async (data) => {
   informationData.value = result.data
   if (informationData.value?.result3) {
     informationData.value.result3 = informationData.value.result3.map((item) => {
-      const { base64, url } = item
-      const type = getImageTypeFromUrl(url)
+      const { base64, ...rest } = item
+      const urlKey = Object.keys(rest).find((key) => key.startsWith('text'))
+      const type = urlKey ? getImageTypeFromUrl(urlKey) : 'jpg'
       const base64String = `data:image/${type};base64,${base64}`
       return {
         base64: base64String,
-        url,
+        url: item[urlKey],
       }
     })
   }
   handleNextTab()
 }
 
-const handleInformationGenerate = async (data) => {
+const handleInformationGenerate = async () => {
   isLoading.value = true
   loadingText.value = 'Creating Your Wardrobe'
-
-  const { selectedBackground = [] } = data
-  const imageList = informationData.value?.result2
-    .filter((_, index) => selectedBackground.includes(index))
-    .map((item) => item.url)
   const params = new URLSearchParams({
-    selectedImageList: imageList,
     id: informationData.value?.id,
   })
   const response = await fetch(

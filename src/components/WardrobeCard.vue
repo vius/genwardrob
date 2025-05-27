@@ -1,7 +1,11 @@
 <template>
   <Card class="transition-all duration-300" :class="{ hidden: !isActive }">
     <CardContent class="px-3 sm:px-5 flex-1">
-      <CardSelect :cards="props.data" v-model="selectedImages" class="grid grid-cols-3 gap-3">
+      <CardSelect
+        :cards="props.data"
+        v-model="selectedImages"
+        class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+      >
         <template #default="{ data, index }">
           <img
             :src="`data:image/${data.type};base64,${data.base64}`"

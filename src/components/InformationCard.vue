@@ -52,11 +52,14 @@
             </span>
           </AccordionTrigger>
           <AccordionContent>
-            <CardSelect :cards="props.data.result2" v-model="selectedBackground">
+            <!-- <CardSelect :cards="props.data.result2" v-model="selectedBackground">
               <template #default="{ data }">
                 <img :src="data.url" />
               </template>
-            </CardSelect>
+            </CardSelect> -->
+            <pre class="text-sm whitespace-pre-wrap bg-black text-white p-4 rounded">{{
+              JSON.stringify(props.data.result2, null, 2)
+            }}</pre>
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="recommended-outfits">
@@ -111,21 +114,6 @@ const defaultValue = 'user-profile'
 const selectedBackground = ref([])
 
 const handleGenerate = (e) => {
-  // 判断是否选中了背景
-  if (selectedBackground.value.length === 0) {
-    toast.error('Please select at least one background')
-    return
-  }
-  const button = e.target
-  button.innerText = 'Generating...'
-  button.disabled = true
-  emit('generate', {
-    selectedBackground: selectedBackground.value,
-  })
-
-  setTimeout(() => {
-    button.innerText = 'Generate'
-    button.disabled = false
-  }, 1500)
+  emit('generate')
 }
 </script>
