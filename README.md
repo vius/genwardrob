@@ -1,33 +1,13 @@
-# ./
+## 项目部署在vercel.com上
 
-This template should help get you started developing with Vue 3 in Vite.
+### 修改后端地址
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```
+VITE_API_URL=https://c639-2406-3003-2001-311d-99b9-12e0-dddd-f101.ngrok-free.app
 ```
 
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
+1、分支切换到main上
+2、拉去最新代码
+3、修改.env.production文件中的VITE_API_URL为后端地址
+4、修改完成之后代码push到github上
+5、vercel.com上重新部署项目（main分支代码变更会自动打包上线），此步骤可忽略
