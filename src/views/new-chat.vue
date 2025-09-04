@@ -32,15 +32,20 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'vue-sonner'
 import { UploadIcon } from 'lucide-vue-next'
 import ImageUploader from '@/components/ImageUploader.vue'
+import { useWardrobeStore } from '@/stores/wardrobe'
+
 // Reactive data
 const travelDescription = ref('')
 const selectedFile = ref<File | null>(null)
 const isLoading = ref(false)
+const router = useRouter()
+const wardrobeStore = useWardrobeStore()
 
 // Computed properties
 const canGenerate = computed(() => {
@@ -61,23 +66,38 @@ const generateWardrobe = async () => {
   if (!canGenerate.value) return
 
   isLoading.value = true
-
-  try {
-    // Here you would typically make an API call
-    // For now, we'll simulate the process
-    await new Promise(resolve => setTimeout(resolve, 2000))
-
-    toast.success('Wardrobe generated successfully!')
-
-    // You could emit an event or navigate to results page here
-    // emit('wardrobe-generated', { description: travelDescription.value, file: selectedFile.value })
-
-  } catch (error) {
-    toast.error('Failed to generate wardrobe. Please try again.')
-    console.error('Error generating wardrobe:', error)
-  } finally {
-    isLoading.value = false
+  // Generate random ID and navigate to conversation page
+  const randomId = crypto.randomUUID()
+  toast.success('Wardrobe generated successfully!')
+  const message: any = []
+  // 将当前text和图片数据保存到wardrobe store
+  if (selectedFile.value) {
+    // 将文件转换为base64字符串以便存储
+    const reader = new FileReader()
+    const imageStr: string = await new Promise((resolve) => {
+      reader.onload = (e) => {
+        if (e.target?.result) {
+        }
+        resolve(e.target?.result as string)
+      }
+      reader.readAsDataURL(selectedFile.value as Blob)
+    })
+    message.push({
+      type: 'image',
+      content: imageStr
+    });
   }
+  if (travelDescription.value) {
+    message.push({
+      type: 'text',
+      content: travelDescription.value
+    })
+  }
+  wardrobeStore.initConversation(randomId, {
+    type: 'user',
+    message
+  })
+  router.push(`/conversation/${randomId}`)
 }
 </script>
 

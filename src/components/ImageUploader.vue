@@ -88,7 +88,7 @@ const getImageDimensions = (): string => {
   <div class="w-auto h-auto flex relative" v-else>
     <div class="relative group cursor-pointer" @click="previewImage">
       <img :src="previewUrl" :class="previewClasses" alt="Preview"
-        class="max-w-48 max-h-48 !object-contain transition-opacity group-hover:opacity-80" />
+        class="max-w-15 max-h-15 sm:max-w-32 sm:max-h-32 !object-contain transition-opacity group-hover:opacity-80" />
       <!-- Hover overlay with zoom icon -->
       <div
         class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 rounded">

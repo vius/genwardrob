@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { SidebarProps } from '@/components/ui/sidebar'
-
-import {
-    Edit
-} from 'lucide-vue-next'
+import { Edit } from 'lucide-vue-next'
 import NavChatList from '@/components/NavChatList.vue'
 import NavUser from '@/components/NavUser.vue'
 import {
@@ -18,6 +15,8 @@ import {
 } from '@/components/ui/sidebar'
 import HyperText from '@/components/ui/hyper-text/HyperText.vue'
 import Logo from '@/assets/logo.png'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const props = withDefaults(defineProps<SidebarProps>(), {
     collapsible: 'icon',
 })
@@ -44,6 +43,11 @@ const handleChatRename = (index: number, newName: string) => {
         data.value.projects[index].name = newName
     }
 }
+const jump2home = () => {
+    router.replace({
+        path: '/'
+    })
+}
 </script>
 
 <template>
@@ -54,9 +58,9 @@ const handleChatRename = (index: number, newName: string) => {
             <img :src="Logo" class="h-8 w-8" v-show="!open" />
         </SidebarHeader>
         <SidebarContent>
-            <section class="px-3" :class="{ '!px-2': !open }">
-                <SidebarMenuButton tooltip="New Chat" class="px-0">
-                    <Edit class="text-muted-foreground" />
+            <section class="px-2" :class="{ '!px-2': !open }">
+                <SidebarMenuButton tooltip="New Chat" class="px-2" @click="jump2home">
+                    <Edit class="text-muted-foreground mr-1" />
                     <span>Create New Chat</span>
                 </SidebarMenuButton>
             </section>
