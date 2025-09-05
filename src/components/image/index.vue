@@ -6,7 +6,8 @@ import { ZoomIn, Download } from 'lucide-vue-next'
 
 const props = defineProps<{
     previewClass?: string,
-    previewUrl: string
+    previewUrl: string,
+    prompt?: string
 }>()
 
 const isPreviewOpen = ref(false)
@@ -19,15 +20,51 @@ const previewImage = () => {
         isPreviewOpen.value = true
     }
 }
+
+const typeMap: any = {
+    'jpg': 'image/jpeg',
+    'jpeg': 'image/jpeg',
+    'png': 'image/png',
+    'gif': 'image/gif',
+    'webp': 'image/webp',
+    'svg': 'image/svg+xml',
+    'bmp': 'image/bmp'
+};
 const downloadImage = () => {
-    if (props.previewUrl) {
-        const link = document.createElement('a')
-        link.href = props.previewUrl
-        link.download = 'download.png'
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
+    const url = props.previewUrl
+    let filename: any = ''
+    try {
+        const urlObj = new URL(url, window.location.href);
+        const pathname: any = urlObj.pathname;
+        let ext = pathname.split('.').pop().split(/\#|\?/)[0]; // 提取后缀
+        if (!typeMap[ext]) {
+            ext = 'jpg'
+        }
+        filename = 'download.' + ext; // 默认 png
+    } catch (e) {
+        filename = 'download.png';
     }
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous'; // 需要目标服务器允许 CORS
+    img.src = url;
+    img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx: any = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        let ext = filename.split('.').pop().toLowerCase();
+        let mimeType = typeMap[ext]
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL(mimeType);
+        a.download = filename;
+        a.click();
+    };
+
+    img.onerror = () => {
+        console.error('图片加载失败：' + url);
+    };
 }
 </script>
 
@@ -61,9 +98,10 @@ const downloadImage = () => {
                         </div>
                     </div>
                 </SheetHeader>
-
                 <!-- Main image display -->
-                <div class="w-full h-full flex items-center justify-center p-16">
+                <div class="w-full h-full flex items-center justify-center p-16 gap-4">
+                    <p class="border border-border p-3 h-full text-black/80 rounded" v-if="props.prompt">{{ props.prompt
+                        }}</p>
                     <img v-if="previewUrl" :src="previewUrl" alt="Full size preview"
                         class="max-w-full max-h-full object-contain" />
                 </div>

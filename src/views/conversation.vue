@@ -1,12 +1,14 @@
 <template>
-    <div class="max-h-screen overflow-hidden py-8 pb-4  flex flex-col gap-3 items-center bg-background text-black/75">
+    <div
+        class="max-h-screen overflow-hidden py-8 pb-4  px-2 sm:px-0 flex flex-col gap-3 items-center bg-background text-black/75">
         <section class="space-y-6  w-full flex-1 overflow-auto px-3 sm:px-12 flex justify-center">
             <div class="max-w-4xl">
                 <div v-for="message, index in messages" :key="message.id"
                     :class="['flex items-start gap-3', message.type === 'user' ? 'justify-end' : 'justify-start']">
                     <div class="py-2">
                         <template v-for="item in message.message">
-                            <PrwviewImage v-if="item.type === 'image'" :previewUrl="item.content" />
+                            <PrwviewImage v-if="item.type === 'image'" :previewUrl="item.content"
+                                :prompt="item.prompt" />
                             <p class="break-all my-2" v-if="item.type === 'text'"
                                 :class="['rounded-lg', message.type === 'user' ? 'bg-muted py-2.5 px-4' : '']">{{
                                     item.content
@@ -14,7 +16,7 @@
                         </template>
                         <div v-if="message.status === 2" class="flex gap-3">
                             <Button @click="retrieve(true)" :disabled="index !== messages.length - 1"
-                                class="hover:bg-zinc-700/90 bg-zinc-700">
+                                variant="destructive">
                                 Retrieve
                             </Button>
 
@@ -34,7 +36,7 @@
             </div>
         </section>
         <div
-            class="bg-background border max-w-4xl px-3 sm:px-12 border-gray-200 p-2.5 flex w-full cursor-text flex-col items-center justify-center overflow-clip bg-clip-padding contain-inline-size rounded-3xl">
+            class="bg-background border max-w-4xl p-3 border-gray-200 flex w-full cursor-text flex-col items-center justify-center overflow-clip bg-clip-padding contain-inline-size rounded-3xl">
             <Textarea id="travel-description" v-model="travelDescription"
                 placeholder="Please enter your travel description here, for example: 'I'm planning to travel to Singapore in July. Could you recommend suitable outfits for the trip?'"
                 class="min-h-[60px] resize-none border-0 focus-visible:ring-ring/0 focus-visible:shadow-none shadow-none"

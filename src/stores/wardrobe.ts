@@ -44,7 +44,8 @@ export const useWardrobeStore = defineStore('wardrobe', () => {
         content: 'ongratulations! Congratulations! Here’s a wardrobe recommendation that fits your needs. You can click the generate button to continue creating a Visualized Fashion Wardrobe.'
       }, {
         type: 'image',
-        content: 'https://gips2.baidu.com/it/u=195724436,3554684702&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=960'
+        content: 'https://gips2.baidu.com/it/u=195724436,3554684702&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=960',
+        prompt: '生化池呢各一张啊上课了打了卡大数据拉萨登记'
       }, {
         type: 'image',
         content: 'https://gips2.baidu.com/it/u=195724436,3554684702&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=960'
