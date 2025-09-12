@@ -16,13 +16,10 @@ export default defineConfig({
 		port: 3000,
 		open: true,
 		proxy: {
-			"/admin": {
+			"/api": {
 				target: "https://e3bf4469e202.ngrok-free.app",
 				changeOrigin: true,
-			},
-			"/user_images": {
-				target: "https://e3bf4469e202.ngrok-free.app",
-				changeOrigin: true,
+				rewrite: (path) => path.replace(/^\/api/, ''),
 			},
 		},
 	},

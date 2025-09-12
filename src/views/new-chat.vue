@@ -66,9 +66,7 @@ const generateWardrobe = async () => {
   if (!canGenerate.value) return
 
   isLoading.value = true
-  // Generate random ID and navigate to conversation page
-  // const randomId = crypto.randomUUID()
-  const conversationId = await wardrobeStore.createConversation()
+  const { id: conversationId } = await wardrobeStore.createConversation()
   toast.success('Wardrobe generated successfully!')
   const message: any = []
   // 将当前text和图片数据保存到wardrobe store
@@ -94,11 +92,11 @@ const generateWardrobe = async () => {
       content: travelDescription.value
     })
   }
-  wardrobeStore.initConversation(randomId, {
+  wardrobeStore.initConversation(conversationId, {
     type: 'user',
     message
   })
-  router.push(`/conversation/${randomId}`)
+  router.push(`/conversation/${conversationId}`)
 }
 </script>
 
