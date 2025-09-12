@@ -98,7 +98,7 @@ const generateWardrobe = async () => {
       message
     })
     router.push(`/conversation/${conversationId}`)
-  }, 500);
+  }, 16 * 4);
 }
 </script>
 

@@ -5,7 +5,7 @@
             <div class="max-w-4xl">
                 <div v-for="message, index in messages" :key="message.id"
                     :class="['flex items-start gap-3', message.type === 'user' ? 'justify-end' : 'justify-start']">
-                    <div class="py-2">
+                    <div class="py-2" :class="{ 'text-right': message.type === 'user' }">
                         <template v-for="item in message.message">
                             <PrwviewImage v-if="item.type === 'image'" :previewUrl="item.content"
                                 :prompt="item.prompt" />
@@ -26,9 +26,9 @@
                             </Button>
                         </div>
                         <div v-if="message.status === 3">
-                            <Button @click="retrieve(false)" :disabled="index !== messages.length - 1"
+                            <Button @click="tryon()" :disabled="index !== messages.length - 1"
                                 class="hover:bg-violet-500/90 bg-violet-500">
-                                Generate
+                                Try-on
                             </Button>
                         </div>
                     </div>
@@ -104,24 +104,35 @@ const chat = () => {
     sendMessage(userMessageParts);
 };
 
-const sendMessage = (messageParts: Message['message'], skipretrieve = false) => {
+const sendMessage = (messageParts: Message['message'], data = {}) => {
     const newMessage: Message = {
         id: Date.now().toString(),
         type: 'user',
         message: messageParts,
-        skip_retrieve: skipretrieve
+        ...data
     };
     wardrobeStore.addMessage(newMessage);
     travelDescription.value = '';
     selectedFile.value = null;
 }
 
-const retrieve = (retrieve = false) => {
+const retrieve = (skipretrieve = false) => {
     const message: Message['message'] = [{
         type: 'text',
-        content: retrieve ? 'retrieve' : 'generate directly'
+        content: skipretrieve ? 'generate directly' : 'retrieve'
     }]
-    sendMessage(message, retrieve)
+    sendMessage(message, {
+        skip_retrieve: skipretrieve
+    })
+}
+const tryon = () => {
+    const message: Message['message'] = [{
+        type: 'text',
+        content: 'Try-on'
+    }]
+    sendMessage(message, {
+        try_on: true
+    })
 }
 if (!messages.value.length) {
     wardrobeStore.getConversationDetail(conversationId.value)
