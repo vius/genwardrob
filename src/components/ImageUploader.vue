@@ -79,8 +79,8 @@ const getImageDimensions = (): string => {
   <!-- Upload Button (when no image) -->
   <div @click="handleClick" v-if="!previewUrl">
     <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" class="hidden" />
-    <Button variant="ghost" size="icon" class="rounded-full">
-      <ImageUp :size="28" />
+    <Button variant="ghost" size="icon" class="rounded-full size-10">
+      <ImageUp class="!size-6" />
     </Button>
   </div>
 

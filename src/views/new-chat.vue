@@ -101,7 +101,3 @@ const generateWardrobe = async () => {
   }, 16 * 4);
 }
 </script>
-
-<style scoped>
-/* Additional custom styles if needed */
-</style>
