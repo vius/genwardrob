@@ -99,9 +99,9 @@ const downloadImage = () => {
                     </div>
                 </SheetHeader>
                 <!-- Main image display -->
-                <div class="w-full h-full flex items-center justify-center p-16 gap-4">
+                <div class="w-full h-full flex items-center justify-center p-4 gap-4 sm:p-12 lg:p-16">
                     <p class="border border-border p-3 h-full text-black/80 rounded" v-if="props.prompt">{{ props.prompt
-                        }}</p>
+                    }}</p>
                     <img v-if="previewUrl" :src="previewUrl" alt="Full size preview"
                         class="max-w-full max-h-full object-contain" />
                 </div>
