@@ -67,7 +67,8 @@ const generateWardrobe = async () => {
 
   isLoading.value = true
   // Generate random ID and navigate to conversation page
-  const randomId = crypto.randomUUID()
+  // const randomId = crypto.randomUUID()
+  const conversationId = await wardrobeStore.createConversation()
   toast.success('Wardrobe generated successfully!')
   const message: any = []
   // 将当前text和图片数据保存到wardrobe store

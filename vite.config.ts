@@ -17,11 +17,11 @@ export default defineConfig({
 		open: true,
 		proxy: {
 			"/admin": {
-				target: "https://5bd4-58-96-252-202.ngrok-free.app",
+				target: "https://e3bf4469e202.ngrok-free.app",
 				changeOrigin: true,
 			},
 			"/user_images": {
-				target: "https://5bd4-58-96-252-202.ngrok-free.app",
+				target: "https://e3bf4469e202.ngrok-free.app",
 				changeOrigin: true,
 			},
 		},

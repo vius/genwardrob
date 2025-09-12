@@ -16,52 +16,13 @@ export interface Message {
 
 export const useWardrobeStore = defineStore('wardrobe', () => {
   // New state for conversations
-  const conversation = ref<Record<string, any>>({
-    id: "",
-    messages: [{
-      type: 'user',
-      message: [{
-        type: 'text',
-        content: '我要去新西兰旅游'
-      }]
-    }, {
-      type: 'assistant',
-      message: [{
-        type: 'text',
-        content: '很好，你的消息是完整的'
-      }],
-      status: 2
-    }, {
-      type: 'user',
-      message: [{
-        type: 'text',
-        content: 'generate directly'
-      }]
-    }, {
-      type: 'assistant',
-      message: [{
-        type: 'text',
-        content: 'ongratulations! Congratulations! Here’s a wardrobe recommendation that fits your needs. You can click the generate button to continue creating a Visualized Fashion Wardrobe.'
-      }, {
-        type: 'image',
-        content: 'https://gips2.baidu.com/it/u=195724436,3554684702&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=960',
-        prompt: '生化池呢各一张啊上课了打了卡大数据拉萨登记'
-      }, {
-        type: 'image',
-        content: 'https://gips2.baidu.com/it/u=195724436,3554684702&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=960'
-      }, {
-        type: 'image',
-        content: 'https://gips2.baidu.com/it/u=195724436,3554684702&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=960'
-      }],
-      status: 3
-    }]
-  });
+  const conversation = ref<Record<string, any>>();
   const getConversation = () => {
     return conversation.value
   }
   const getMessages = () => {
     const data = getConversation()
-    return data.messages || []
+    return data?.messages || []
   }
   const addMessage = async (message: Message) => {
     const messages = getMessages()
@@ -83,11 +44,15 @@ export const useWardrobeStore = defineStore('wardrobe', () => {
     // 获取详情
     console.log('获取详情', conversationId)
   }
+  const createConversation = async () => {
+    return 12313
+  }
   return {
+    createConversation,
     getConversationDetail,
     initConversation,
     getConversation,
     getMessages,
-    addMessage
+    addMessage,
   };
 });
