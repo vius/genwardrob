@@ -2,7 +2,7 @@
     <div
         class="max-h-screen overflow-hidden py-8 pb-4  px-2 sm:px-0 flex flex-col gap-3 items-center bg-background text-black/75">
         <section class="space-y-6  w-full flex-1 overflow-auto px-3 sm:px-12 flex justify-center">
-            <div class="max-w-4xl">
+            <div class="max-w-4xl w-full">
                 <div v-for="message, index in messages" :key="message.id"
                     :class="['flex items-start gap-3', message.type === 'user' ? 'justify-end' : 'justify-start']">
                     <div class="py-2" :class="{ 'text-right': message.type === 'user' }">
