@@ -11,11 +11,11 @@ export interface Message {
   id?: string;
   type: 'user' | 'assistant';
   message: MessagePart[];
-  retrieve?: boolean
+  skip_retrieve?: boolean,
+  try_on?: boolean
 }
 
 export const useWardrobeStore = defineStore('wardrobe', () => {
-  // New state for conversations
   const conversation = ref<Record<string, any>>();
   const getConversation = () => {
     return conversation.value
@@ -27,17 +27,12 @@ export const useWardrobeStore = defineStore('wardrobe', () => {
   const addMessage = async (item: Message) => {
     const messages = getMessages()
     messages.push(item)
-    const processedMessage = item.message.map((part: MessagePart) => ({
-      ...part,
-      // content: part.type === 'image' ? part.content.replace(/^data:/, '') : part.content
-    }))
     const data = await post('/conversation/chat', {
       conversationId: conversation.value?.id,
-      message: processedMessage,
+      ...item
     })
     console.log('data', data)
-    return data
-    // 调用接口
+    messages.push(data)
   }
   const initConversation = (conversationId: string, initialMessage: Message | null = null) => {
     conversation.value = {

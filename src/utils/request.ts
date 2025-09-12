@@ -5,6 +5,7 @@ export async function post(url: string, data: any = {}) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
         },
         body: JSON.stringify(data),
     })

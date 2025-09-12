@@ -15,12 +15,12 @@
                                 }}</p>
                         </template>
                         <div v-if="message.status === 2" class="flex gap-3">
-                            <Button @click="retrieve(true)" :disabled="index !== messages.length - 1"
+                            <Button @click="retrieve(false)" :disabled="index !== messages.length - 1"
                                 variant="destructive">
                                 Retrieve
                             </Button>
 
-                            <Button @click="retrieve(false)" :disabled="index !== messages.length - 1"
+                            <Button @click="retrieve(true)" :disabled="index !== messages.length - 1"
                                 class="hover:bg-violet-500/90 bg-violet-500">
                                 Generate Directly
                             </Button>
@@ -104,15 +104,14 @@ const chat = () => {
     sendMessage(userMessageParts);
 };
 
-const sendMessage = (messageParts: Message['message'], retrieve = false) => {
+const sendMessage = (messageParts: Message['message'], skipretrieve = false) => {
     const newMessage: Message = {
         id: Date.now().toString(),
         type: 'user',
         message: messageParts,
-        retrieve
+        skip_retrieve: skipretrieve
     };
     wardrobeStore.addMessage(newMessage);
-    // Reset inputs
     travelDescription.value = '';
     selectedFile.value = null;
 }

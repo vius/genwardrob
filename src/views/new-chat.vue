@@ -92,11 +92,13 @@ const generateWardrobe = async () => {
       content: travelDescription.value
     })
   }
-  wardrobeStore.initConversation(conversationId, {
-    type: 'user',
-    message
-  })
-  router.push(`/conversation/${conversationId}`)
+  setTimeout(() => {
+    wardrobeStore.initConversation(conversationId, {
+      type: 'user',
+      message
+    })
+    router.push(`/conversation/${conversationId}`)
+  }, 500);
 }
 </script>
 
