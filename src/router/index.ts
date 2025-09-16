@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NewChatPage from '../views/new-chat.vue'
-import AuthTestPage from '../views/auth-test.vue'
 import OAuthCallbackPage from '../views/oauth-callback.vue'
 import ConversationPage from '../views/conversation.vue'
 
@@ -11,11 +10,6 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: NewChatPage,
-    },
-    {
-      path: '/auth-test',
-      name: 'auth-test',
-      component: AuthTestPage,
     },
     {
       path: '/auth/google/callback',

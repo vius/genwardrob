@@ -9,10 +9,13 @@
                         <template v-for="item in message.message">
                             <PrwviewImage v-if="item.type === 'image'" :previewUrl="item.content"
                                 :prompt="item.prompt" />
-                            <p class="break-all my-2" v-if="item.type === 'text'"
-                                :class="['rounded-lg', message.type === 'user' ? 'bg-muted py-2.5 px-4' : '']">{{
-                                    item.content
-                                }}</p>
+                            <section class="my-2" v-if="item.type === 'text'">
+                                <p
+                                    :class="['rounded-lg text-left inline-block break-all', message.type === 'user' ? 'bg-muted py-2.5 px-4' : '']">
+                                    {{
+                                        item.content
+                                    }}</p>
+                            </section>
                         </template>
                         <div v-if="message.status === 2" class="flex gap-3">
                             <Button @click="retrieve(false)" :disabled="index !== messages.length - 1"

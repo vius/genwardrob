@@ -1,12 +1,15 @@
 import { toast } from 'vue-sonner'
 
 export async function post(url: string, data: any = {}) {
+    const guestId = localStorage.getItem('guest_id') || ''
     const response = await fetch(`${import.meta.env.VITE_API_URL}${url}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'ngrok-skip-browser-warning': 'true',
+            'X-Guest-Id': guestId,
         },
+        credentials: "include",
         body: JSON.stringify(data),
     })
     let errText = response.statusText || 'Request failed'
@@ -23,9 +26,15 @@ export async function post(url: string, data: any = {}) {
 }
 
 export async function get(url: string, params?: Record<string, any>) {
+    const guestId = localStorage.getItem('guest_id') || ''
     const query = params ? `?${new URLSearchParams(params).toString()}` : ''
     const response = await fetch(`${import.meta.env.VITE_API_URL}${url}${query}`, {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+            'ngrok-skip-browser-warning': 'true',
+            'X-Guest-Id': guestId,
+        },
+        credentials: "include",
     })
     let errText = response.statusText || 'Request failed'
     if (response.ok) {

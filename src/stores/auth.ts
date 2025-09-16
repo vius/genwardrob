@@ -18,7 +18,15 @@ export interface GuestUser {
   avatar: string
   isGuest: true
 }
+function maskGuestId(str: string) {
+  const prefix = "guest_";
+  if (!str.startsWith(prefix)) return str;
 
+  const id = str.slice(prefix.length);
+  if (id.length <= 8) return str;
+
+  return prefix + id.slice(0, 4) + "****" + id.slice(-4);
+}
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
   const guestId = ref<string | null>(null)
@@ -31,10 +39,9 @@ export const useAuthStore = defineStore('auth', () => {
     }
     if (guestId.value) {
       return {
-        id: guestId.value,
         name: 'Guest User',
-        email: 'guest@example.com',
-        avatar: 'https://via.placeholder.com/40x40/6b7280/ffffff?text=G',
+        email: maskGuestId(guestId.value),
+        avatar: '',
         isGuest: true
       } as GuestUser
     }
@@ -58,12 +65,12 @@ export const useAuthStore = defineStore('auth', () => {
       const fp = await FingerprintJS.load()
       const result = await fp.get()
       const fingerprint = result.visitorId
-      
+
       // 生成游客ID（添加前缀以区分）
       const newGuestId = `guest_${fingerprint}`
       guestId.value = newGuestId
       localStorage.setItem('guest_id', newGuestId)
-      
+
       return newGuestId
     } catch (error) {
       console.error('Failed to initialize guest ID:', error)
@@ -98,34 +105,11 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // GitHub OAuth登录
-  const loginWithGitHub = async () => {
-    isLoading.value = true
-    try {
-      // 检查是否支持OAuth
-      if (!isOAuthSupported()) {
-        throw new Error('OAuth is only supported on HTTPS or localhost')
-      }
-
-      // 使用OAuth服务进行登录
-      await oauthLoginWithGitHub()
-
-      // OAuth成功后，用户信息会在回调页面中设置
-      // 这里不需要额外处理，因为回调页面会更新store状态
-
-    } catch (error) {
-      console.error('GitHub login failed:', error)
-      throw error
-    } finally {
-      isLoading.value = false
-    }
-  }
-
   // 登出
   const logout = () => {
     user.value = null
     localStorage.removeItem('user')
-    
+
     // 重新初始化游客身份
     initializeGuestId()
   }
@@ -163,7 +147,6 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading,
     initializeGuestId,
     loginWithGoogle,
-    loginWithGitHub,
     logout,
     restoreUserFromStorage,
     initialize
