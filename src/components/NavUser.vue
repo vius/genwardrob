@@ -42,7 +42,7 @@ onMounted(async () => {
 const handleGoogleLogin = async () => {
   try {
     // await authStore.loginWithGoogle()
-    window.location.href = `https://e3bf4469e202.ngrok-free.app/auth/login/start?provider=google&redirect=${location.href}`
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/login/start?provider=google&redirect=${location.href}`
     toast.success('Successfully logged in with Google!')
   } catch (error) {
     toast.error('Failed to login with Google')
