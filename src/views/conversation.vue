@@ -20,18 +20,18 @@
                         <div v-if="message.status === 2" class="flex gap-3">
                             <Button @click="retrieve(false)" :disabled="index !== messages.length - 1"
                                 variant="destructive">
-                                Retrieve
+                                Refer Knowledge
                             </Button>
 
                             <Button @click="retrieve(true)" :disabled="index !== messages.length - 1"
                                 class="hover:bg-violet-500/90 bg-violet-500">
-                                Generate Directly
+                                Generate
                             </Button>
                         </div>
                         <div v-if="message.status === 3">
                             <Button @click="tryon()" :disabled="index !== messages.length - 1"
                                 class="hover:bg-violet-500/90 bg-violet-500">
-                                Try-on
+                                Yes, please try-on
                             </Button>
                         </div>
                     </div>
@@ -122,7 +122,7 @@ const sendMessage = (messageParts: Message['message'], data = {}) => {
 const retrieve = (skipretrieve = false) => {
     const message: Message['message'] = [{
         type: 'text',
-        content: skipretrieve ? 'generate directly' : 'retrieve'
+        content: skipretrieve ? 'Generate' : 'Refer Knowledge'
     }]
     sendMessage(message, {
         skip_retrieve: skipretrieve
@@ -131,7 +131,7 @@ const retrieve = (skipretrieve = false) => {
 const tryon = () => {
     const message: Message['message'] = [{
         type: 'text',
-        content: 'Try-on'
+        content: 'Yes, please try-on'
     }]
     sendMessage(message, {
         try_on: true

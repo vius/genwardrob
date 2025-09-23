@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen flex items-center flex-col gap-y-3 p-4 overflow-auto">
-    <!-- <h1 class="text-2xl md:text-5xl font-bold mb-5 text-foreground">Travel Wardrobe</h1> -->
     <Stepper class="flex w-full items-start gap-2" v-model="step">
       <StepperItem v-for="item in steps" :key="item.step" v-slot="{ state }"
         class="relative flex w-full flex-col items-center justify-center" :step="item.step">
@@ -100,7 +99,6 @@ const handleUserInputGenerate = async (data) => {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/submit`, {
     method: 'POST',
     headers: {
-      'ngrok-skip-browser-warning': 'true',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
@@ -141,7 +139,6 @@ const handleInformationGenerate = async () => {
     `${import.meta.env.VITE_API_URL}/admin/getResults?${params.toString()}`,
     {
       headers: {
-        'ngrok-skip-browser-warning': 'true',
       },
     },
   ).finally(() => {

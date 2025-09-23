@@ -3,12 +3,12 @@
     <div class="w-full mx-auto lg:px-16 sm:px-8 px-3 flex-1">
       <div class="text-center space-y-4 mb-6 flex-1">
         <h1 class="text-3xl md:text-4xl font-bold text-foreground">
-          What would you like to wear today?
+          Plan your personalized travel outfits with GenWardrobe.
         </h1>
 
         <p class="text-muted-foreground text-base leading-relaxed max-w-3xl mx-auto">
-          You can click the button in the dialog box to upload a full-body photo and enter your travel
-          description (location, time, and purpose) in the dialog box to get GenWardrobe
+          Click the button in the dialog box to upload a full-body photo, then enter your travel details (location,
+          time, and purpose) to get your GenWardrobe
         </p>
       </div>
 

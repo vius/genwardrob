@@ -6,7 +6,6 @@ export async function post(url: string, data: any = {}) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true',
             'X-Guest-Id': guestId,
         },
         credentials: "include",
@@ -31,7 +30,6 @@ export async function get(url: string, params?: Record<string, any>) {
     const response = await fetch(`${import.meta.env.VITE_API_URL}${url}${query}`, {
         method: 'GET',
         headers: {
-            'ngrok-skip-browser-warning': 'true',
             'X-Guest-Id': guestId,
         },
         credentials: "include",
