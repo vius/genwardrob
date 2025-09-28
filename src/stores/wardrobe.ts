@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import { post } from '@/utils/request'
+import { post, get } from '@/utils/request'
 // Updated message structure to match conversation.vue
 interface MessagePart {
   type: 'text' | 'image';
@@ -45,9 +45,16 @@ export const useWardrobeStore = defineStore('wardrobe', () => {
   }
 
   const getConversationDetail = async (conversationId: string) => {
-    initConversation(conversationId)
     // 获取详情
     console.log('获取详情', conversationId)
+    const data = await get('/conversation/detail', {
+      id: conversationId
+    })
+    initConversation(conversationId)
+    conversation.value = {
+      ...data
+    }
+    console.log('获取详情', data)
   }
   const createConversation = async () => {
     const conversation = await post('/conversation/create', {

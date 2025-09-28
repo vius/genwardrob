@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import FingerprintJS from '@fingerprintjs/fingerprintjs'
-import { loginWithGoogle as oauthLoginWithGoogle, loginWithGitHub as oauthLoginWithGitHub, isOAuthSupported } from '@/services/oauth'
+import { loginWithGoogle as oauthLoginWithGoogle, isOAuthSupported } from '@/services/oauth'
 
 export interface User {
   id: string

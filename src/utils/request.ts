@@ -31,6 +31,7 @@ export async function get(url: string, params?: Record<string, any>) {
         method: 'GET',
         headers: {
             'X-Guest-Id': guestId,
+            'ngrok-skip-browser-warning': 'true',
         },
         credentials: "include",
     })
