@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, nextTick, computed } from 'vue'
+import { ref, computed } from 'vue'
 import {
   Edit,
   MoreHorizontal,
@@ -33,6 +33,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useRouter, useRoute } from 'vue-router'
+import { useWardrobeStore } from '@/stores/wardrobe'
+const wardrobeStore = useWardrobeStore()
 const router = useRouter()
 const route = useRoute()
 defineProps<{
@@ -87,6 +89,8 @@ const handleKeydown = (event: KeyboardEvent) => {
 }
 
 const jump2Detail = (id: string) => {
+  console.log('jump2Detail>>>>', id)
+  wardrobeStore.initConversation(id)
   router.push(`/conversation/${id}`)
 }
 

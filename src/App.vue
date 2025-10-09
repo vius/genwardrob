@@ -8,7 +8,7 @@
             <SidebarTrigger class="-ml-1" />
           </div>
         </header>
-        <router-view class="flex-1" />
+        <router-view class="flex-1" :key="$route.fullPath" />
       </main>
     </SidebarProvider>
   </div>
@@ -26,9 +26,12 @@ import {
 } from '@/components/ui/sidebar'
 import { generateFingerprint } from '@/utils/finger';
 import { ref } from 'vue'
+import { useAuthStore } from './stores/auth';
+const authStore = useAuthStore()
+authStore.initialize()
 const fingerprint: any = ref('')
 const init = async () => {
-  fingerprint.value = await generateFingerprint('stable');
+  fingerprint.value = generateFingerprint('stable');
 }
 init()
 

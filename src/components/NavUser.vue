@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import {
-  BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
 } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
@@ -32,11 +27,6 @@ import { useAuthStore } from '@/stores/auth'
 
 const { isMobile } = useSidebar()
 const authStore = useAuthStore()
-
-// 初始化认证状态
-onMounted(async () => {
-  await authStore.initialize()
-})
 
 // 处理Google登录
 const handleGoogleLogin = async () => {
@@ -64,7 +54,6 @@ const handleLogout = () => {
           <SidebarMenuButton size="lg"
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
             <Avatar class="h-8 w-8 rounded-lg">
-              <AvatarImage :src="authStore.currentUser?.avatar" :alt="authStore.currentUser?.name" />
               <AvatarFallback class="rounded-lg">
                 {{ authStore.isGuest ? 'G' : (authStore.currentUser?.name?.charAt(0) || 'U') }}
               </AvatarFallback>

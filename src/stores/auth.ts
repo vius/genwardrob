@@ -2,13 +2,11 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import FingerprintJS from '@fingerprintjs/fingerprintjs'
 import { loginWithGoogle as oauthLoginWithGoogle, isOAuthSupported } from '@/services/oauth'
+import { post, get } from '@/utils/request'
 
 export interface User {
-  id: string
   name: string
   email: string
-  avatar: string
-  provider?: 'google' | 'github'
 }
 
 export interface GuestUser {
@@ -69,8 +67,8 @@ export const useAuthStore = defineStore('auth', () => {
       // 生成游客ID（添加前缀以区分）
       const newGuestId = `guest_${fingerprint}`
       guestId.value = newGuestId
-      localStorage.setItem('guest_id', newGuestId)
-
+      localStorage.setItem('guest_id', newGuestId);
+      return newGuestId
       return newGuestId
     } catch (error) {
       console.error('Failed to initialize guest ID:', error)
@@ -106,35 +104,33 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // 登出
-  const logout = () => {
+  const logout = async () => {
     user.value = null
-    localStorage.removeItem('user')
-
-    // 重新初始化游客身份
-    initializeGuestId()
+    await post('/auth/logout')
+    location.href = location.origin
+    window.location.reload()
   }
 
-  // 从本地存储恢复用户状态
-  const restoreUserFromStorage = () => {
-    try {
-      const storedUser = localStorage.getItem('user')
-      if (storedUser) {
-        user.value = JSON.parse(storedUser)
-      } else {
-        // 如果没有登录用户，初始化游客身份
-        initializeGuestId()
+  const getUserInfo = async () => {
+    const data = await get('/auth/getuserInfo')
+    const { email } = data
+    if (email) {
+      user.value = {
+        name: 'Google User',
+        email,
       }
-    } catch (error) {
-      console.error('Failed to restore user from storage:', error)
+    } else {
       initializeGuestId()
     }
+    console.log('data', data)
   }
 
   // 初始化认证状态
-  const initialize = async () => {
-    restoreUserFromStorage()
-    if (!user.value && !guestId.value) {
-      await initializeGuestId()
+  const initialize = () => {
+    try {
+      getUserInfo()
+    } catch (_) {
+      initializeGuestId()
     }
   }
 
@@ -148,7 +144,7 @@ export const useAuthStore = defineStore('auth', () => {
     initializeGuestId,
     loginWithGoogle,
     logout,
-    restoreUserFromStorage,
-    initialize
+    initialize,
+    getUserInfo
   }
 })

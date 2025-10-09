@@ -140,7 +140,6 @@ const tryon = () => {
 if (!messages.value.length) {
     wardrobeStore.getConversationDetail(conversationId.value)
 }
-
 </script>
 
 <style scoped>

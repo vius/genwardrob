@@ -31,7 +31,6 @@ export const useWardrobeStore = defineStore('wardrobe', () => {
       conversationId: conversation.value?.id,
       ...item
     })
-    console.log('data', data)
     messages.push(data)
   }
   const initConversation = (conversationId: string, initialMessage: Message | null = null) => {
@@ -45,8 +44,6 @@ export const useWardrobeStore = defineStore('wardrobe', () => {
   }
 
   const getConversationDetail = async (conversationId: string) => {
-    // 获取详情
-    console.log('获取详情', conversationId)
     const data = await get('/conversation/detail', {
       id: conversationId
     })
