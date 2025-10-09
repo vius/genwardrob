@@ -108,7 +108,9 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null
     await post('/auth/logout')
     location.href = location.origin
-    window.location.reload()
+    setTimeout(() => {
+      window.location.reload()
+    }, 100);
   }
 
   const getUserInfo = async () => {
